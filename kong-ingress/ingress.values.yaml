@@ -1,0 +1,4 @@
+gateway:
+  admin:
+    http:
+      enabled: true
