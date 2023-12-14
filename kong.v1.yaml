@@ -1,0 +1,143 @@
+_format_version: "3.0"
+consumers:
+- basicauth_credentials:
+  - password: b4179f2b821621b87e1e24ac74316e3ff3798341
+    username: kimnh
+  - password: b4179f2b821621b87e1e24ac74316e3ff3798341
+    username: kimyvgy
+  custom_id: "10001"
+  tags:
+  - devsuccess101
+  username: kimyvgy
+- custom_id: "10002"
+  tags:
+  - sunasterisk
+  username: nguyen.huu.kim
+services:
+- connect_timeout: 60000
+  enabled: true
+  host: whoami
+  name: whoami
+  plugins:
+  - config:
+      anonymous: null
+      hide_credentials: true
+    enabled: true
+    instance_name: devsuccess101
+    name: basic-auth
+    protocols:
+    - grpc
+    - grpcs
+    - http
+    - https
+    tags:
+    - devsuccess101
+  port: 80
+  protocol: http
+  read_timeout: 60000
+  retries: 5
+  routes:
+  - hosts:
+    - whoami.lc
+    https_redirect_status_code: 426
+    name: whoami-api-v1
+    path_handling: v0
+    paths:
+    - /api/v1
+    preserve_host: false
+    protocols:
+    - http
+    - https
+    regex_priority: 0
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+    tags:
+    - devsuccess101
+  tags:
+  - devsuccess101
+  - whoami
+  write_timeout: 60000
+upstreams:
+- algorithm: round-robin
+  hash_fallback: none
+  hash_on: none
+  hash_on_cookie_path: /
+  healthchecks:
+    active:
+      concurrency: 10
+      healthy:
+        http_statuses:
+        - 200
+        - 302
+        interval: 5
+        successes: 3
+      http_path: /health
+      https_verify_certificate: true
+      timeout: 3
+      type: http
+      unhealthy:
+        http_failures: 3
+        http_statuses:
+        - 400
+        - 401
+        - 404
+        - 500
+        - 501
+        - 502
+        - 402
+        - 403
+        interval: 5
+        tcp_failures: 0
+        timeouts: 1
+    passive:
+      healthy:
+        http_statuses:
+        - 200
+        - 201
+        - 202
+        - 203
+        - 204
+        - 205
+        - 206
+        - 207
+        - 208
+        - 226
+        - 300
+        - 301
+        - 302
+        - 303
+        - 304
+        - 305
+        - 306
+        - 307
+        - 308
+        successes: 0
+      type: http
+      unhealthy:
+        http_failures: 0
+        http_statuses:
+        - 429
+        - 500
+        - 503
+        tcp_failures: 0
+        timeouts: 0
+    threshold: 3
+  host_header: whoami.lc
+  name: whoami
+  slots: 10000
+  tags:
+  - devsuccess101
+  - whoami
+  targets:
+  - tags:
+    - devsuccess101
+    - whoami
+    target: whoami-app-1:80
+    weight: 100
+  - tags:
+    - devsuccess101
+    - whoami
+    target: whoami-app-2:80
+    weight: 100
+  use_srv_name: false

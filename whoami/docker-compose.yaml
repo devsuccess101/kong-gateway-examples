@@ -1,0 +1,18 @@
+version: "3.6"
+
+networks:
+  kong-net:
+    name: kong-net
+
+services:
+  app-1:
+    container_name: whoami-app-1
+    image: traefik/whoami:latest
+    networks:
+      - kong-net
+
+  app-2:
+    container_name: whoami-app-2
+    image: traefik/whoami:latest
+    networks:
+      - kong-net
