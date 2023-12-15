@@ -1,0 +1,46 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: alice
+  annotations:
+    kubernetes.io/ingress.class: "kong"
+username: alice
+credentials:
+  - alice-key
+
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: alice-key
+stringData:
+  key: bylkogdatomoryakom
+  kongCredType: key-auth
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: key-auth-example
+plugin: key-auth
+
+---
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: key-auth-ingress
+  annotations:
+    konghq.com/plugins: "key-auth-example"
+spec:
+  ingressClassName: kong
+  rules:
+    - host: whoami.k8s.lc
+      http:
+        paths:
+          - path: /api/v1/auth/me
+            pathType: Exact
+            backend:
+              service:
+                name: whoami
+                port:
+                  number: 80
