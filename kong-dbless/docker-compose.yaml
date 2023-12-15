@@ -1,6 +1,6 @@
 version: "3.9"
 
-name: kong-postgresql
+name: kong-dbless
 
 volumes:
   kong_data: {}
@@ -31,9 +31,7 @@ services:
       KONG_PROXY_ACCESS_LOG: /dev/stdout
       KONG_PROXY_ERROR_LOG: /dev/stderr
       KONG_PREFIX: ${KONG_PREFIX:-/var/run/kong}
-      KONG_DECLARATIVE_CONFIG: "/opt/kong/kong.yaml"
-    secrets:
-      - kong_postgres_password
+      KONG_DECLARATIVE_CONFIG: "/opt/kong/kong.v1.yaml"
     networks:
       - kong-net
     ports:
